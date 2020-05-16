@@ -61,10 +61,7 @@ class ToggleButton:
     def deactivate(self):
         if self.active:
             self.active = False
-            if self.hovered:
-                self.image = self.image_hover
-            else:
-                self.image = self.image_idle
+            self.image = self.image_hover if self.hovered else self.image_idle
 
     def draw(self, surface):
         surface.blit(self.image, self.rect)

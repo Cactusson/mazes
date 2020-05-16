@@ -16,15 +16,12 @@ def generate_maze(width, height):
     maze[cy][cx] = 0
     stack = [(cx, cy, 0)]  # stack element: (x, y, direction)
 
-    while len(stack) > 0:
+    while stack:
         (cx, cy, cd) = stack[-1]
         # to prevent zigzags:
-        # if changed direction in the last move then cannot change again
+                # if changed direction in the last move then cannot change again
         if len(stack) > 2:
-            if cd != stack[-2][2]:
-                dirRange = [cd]
-            else:
-                dirRange = range(4)
+            dirRange = [cd] if cd != stack[-2][2] else range(4)
         else:
             dirRange = range(4)
 
@@ -33,20 +30,30 @@ def generate_maze(width, height):
         for i in dirRange:
             nx = cx + dx[i]
             ny = cy + dy[i]
-            if nx >= 0 and nx < mx and ny >= 0 and ny < my:
-                if maze[ny][nx] == 1:
-                    ctr = 0  # of occupied neighbors must be 1
-                    for j in range(4):
-                        ex = nx + dx[j]
-                        ey = ny + dy[j]
-                        if ex >= 0 and ex < mx and ey >= 0 and ey < my:
-                            if maze[ey][ex] == 0:
-                                ctr += 1
-                    if ctr == 1:
-                        nlst.append(i)
+            if (
+                nx >= 0
+                and nx < mx
+                and ny >= 0
+                and ny < my
+                and maze[ny][nx] == 1
+            ):
+                ctr = 0  # of occupied neighbors must be 1
+                for j in range(4):
+                    ex = nx + dx[j]
+                    ey = ny + dy[j]
+                    if (
+                        ex >= 0
+                        and ex < mx
+                        and ey >= 0
+                        and ey < my
+                        and maze[ey][ex] == 0
+                    ):
+                        ctr += 1
+                if ctr == 1:
+                    nlst.append(i)
 
         # if 1 or more neighbors available then randomly select one and move
-        if len(nlst) > 0:
+        if nlst:
             ir = nlst[random.randint(0, len(nlst) - 1)]
             cx += dx[ir]
             cy += dy[ir]
